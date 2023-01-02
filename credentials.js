@@ -1,5 +1,14 @@
 import { getAuth } from "firebase/auth";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+  setDoc,
+} from "firebase/firestore";
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
@@ -28,4 +37,45 @@ export const userExist = async (uid) => {
   const queryDoc = await getDoc(docRef);
 
   return queryDoc.exists();
+};
+
+export const existUserName = async (username) => {
+  const users = [];
+  const docsRef = collection(firestore, "users");
+  const q = query(docsRef, where("username", "==", username));
+  const querySnapshot = await getDocs(q);
+
+  //console.log(q);
+
+  //console.log(querySnapshot);
+
+  querySnapshot.forEach((doc) => users.push(doc.data()));
+
+  return users.length > 0 ? users[0].uid : null;
+};
+
+export const registerNewUser = async (user) => {
+  try {
+    const collectionRef = collection(firestore, "users");
+    const docRef = doc(collectionRef, user.uid);
+    await setDoc(docRef, user);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+export const updateUser = async (user) => {
+  try {
+    const collectionRef = collection(firestore, "users");
+    const docRef = doc(collectionRef, user.uid);
+    await setDoc(docRef, user);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+export const getUserInfo = async (uid) => {
+  const docRef = doc(firestore, "users", uid);
+  const document = await getDoc(docRef);
+  return document.data();
 };

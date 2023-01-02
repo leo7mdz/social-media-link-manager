@@ -1,7 +1,11 @@
-import { onAuthStateChanged, getAuth } from "firebase/auth";
-
-import { userExist, auth } from "../../credentials";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import {
+  userExist,
+  auth,
+  registerNewUser,
+  getUserInfo,
+} from "../../credentials";
 import { useNavigate } from "react-router-dom";
 
 const AuthProvider = ({
@@ -11,15 +15,28 @@ const AuthProvider = ({
   onUserNotLoggedIn,
 }) => {
   const navigate = useNavigate();
-  /*  const [curresntSate, setCurresntSate] = useState(0); */
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const isRegistered = userExist(user.uid);
+        const isRegistered = await userExist(user.uid);
+        //console.log(isRegistered);
+
         if (isRegistered) {
-          onUserLoggedIn(user);
+          const userInfo = getUserInfo(user.uid);
+          if (userInfo.processCompleted) {
+            onUserLoggedIn(userInfo);
+          } else {
+            onUserNotRegistered(userInfo);
+          }
         } else {
+          await registerNewUser({
+            uid: user.uid,
+            displayName: user.displayName,
+            profilePicture: "",
+            userName: "",
+            processCompleted: false,
+          });
           onUserNotRegistered(user);
         }
       } else {

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { getAuth, GoogleAuthProvider, signInWithRedirect } from "firebase/auth";
-import firebaseApp from "../../credentials";
+import { GoogleAuthProvider, signInWithRedirect } from "firebase/auth";
+import { auth } from "../../credentials";
 import AuthProvider from "../components/AuthProvider";
-const auth = getAuth(firebaseApp);
+import { useNavigate } from "react-router-dom";
 
 const LoginView = () => {
   const [currentuser, setCurrentuser] = useState(null);
@@ -10,9 +10,13 @@ const LoginView = () => {
      1:loading 
      2:login completo 
      3:login pero sin registro 
-     4:no se encuentra logueado */
+     4:no se encuentra logueado
+     5:Ya existe userName
+     6: Nuevo userName , click para continuar*/
 
   const [currentState, setCurrentState] = useState(0);
+
+  const navigate = useNavigate();
 
   const handleClick = async () => {
     try {
@@ -23,19 +27,17 @@ const LoginView = () => {
     }
   };
 
-  const handleUserLoggedIn = (user) => {};
+  const handleUserLoggedIn = (user) => {
+    navigate("/dashboard");
+  };
 
-  const handleUserNotRegistered = () => {};
+  const handleUserNotRegistered = (user) => {
+    navigate("/choose-username");
+  };
 
-  const handleUserNotLoggedIn = () => {};
-
-  if (currentState === 2) {
-    return <div>Estas autenticado y registrado</div>;
-  }
-
-  if (currentState === 3) {
-    return <div>Estas autenticado pero no registrado</div>;
-  }
+  const handleUserNotLoggedIn = () => {
+    setCurrentState(4);
+  };
 
   if (currentState === 4) {
     return (
@@ -51,7 +53,7 @@ const LoginView = () => {
       onUserNotRegistered={handleUserNotRegistered}
       onUserNotLoggedIn={handleUserNotLoggedIn}
     >
-      <div>...Loading</div>
+      ...Loading
     </AuthProvider>
   );
 };
