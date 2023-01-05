@@ -23,7 +23,8 @@ const AuthProvider = ({
         //console.log(isRegistered);
 
         if (isRegistered) {
-          const userInfo = getUserInfo(user.uid);
+          const userInfo = await getUserInfo(user.uid);
+
           if (userInfo.processCompleted) {
             onUserLoggedIn(userInfo);
           } else {

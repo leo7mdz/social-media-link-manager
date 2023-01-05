@@ -6,7 +6,7 @@ import AuthProvider from "../components/AuthProvider";
 const ChooseUserNameView = () => {
   const [currentState, setCurrentState] = useState(0);
   const [currentUser, setCurrentUser] = useState({});
-  const [userName, setUserName] = useState("");
+  const [username, setUserName] = useState("");
   const navigate = useNavigate();
   const handleUserLoggedIn = (user) => {
     navigate("/dashboard");
@@ -26,13 +26,13 @@ const ChooseUserNameView = () => {
   };
 
   const handleContinue = async () => {
-    if (userName !== "") {
-      const exists = await existUserName(userName);
+    if (username !== "") {
+      const exists = await existUserName(username);
       if (exists) {
         setCurrentState(5);
       } else {
         const tmp = { ...currentUser };
-        tmp.username = userName;
+        tmp.username = username;
         tmp.processCompleted = true;
 
         await updateUser(tmp);
