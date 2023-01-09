@@ -3,6 +3,7 @@ import { GoogleAuthProvider, signInWithRedirect } from "firebase/auth";
 import { auth } from "../../credentials";
 import AuthProvider from "../components/AuthProvider";
 import { useNavigate } from "react-router-dom";
+import style from "./login.module.css";
 
 const LoginView = () => {
   const [currentuser, setCurrentuser] = useState(null);
@@ -41,8 +42,11 @@ const LoginView = () => {
 
   if (currentState === 4) {
     return (
-      <div>
-        <button onClick={handleClick}>Login with Google</button>
+      <div className={style.loginView}>
+        <h2>Link tree</h2>
+        <button className={style.provider} onClick={handleClick}>
+          Login with Google
+        </button>
       </div>
     );
   }

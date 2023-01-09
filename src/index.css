@@ -6,3 +6,59 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
+
+.main-container {
+  width: 500px;
+  margin: 0 auto;
+}
+
+.material-icons {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  margin-right: 4px;
+
+
+
+}
+
+body {
+  background-color: rgb(245, 245, 245);
+}
+
+.btn {
+  font-weight: bold;
+  font-size: 18px;
+  border: none;
+  background-color: rgb(13, 110, 184);
+  color: white;
+  padding: 10px 15px;
+  border-radius: 6px;
+  margin-top: 10px;
+  min-width: 150px;
+}
+
+input[type="text"].input {
+  border: solid 1px #ccc;
+  border-radius: 3px;
+  padding: 8px 10px;
+}
+
+label {
+  padding-top: 5px;
+}
+
+a {
+  color: rgb(13, 110, 184);
+  font-weight: bold;
+  text-align: center;
+}

@@ -3,8 +3,15 @@ import { useNavigate } from "react-router-dom";
 import AuthProvider from "../components/AuthProvider";
 import DashboardWrapper from "../components/DashboardWrapper";
 import { v4 as uuidv4 } from "uuid";
-import { insertNewLink, getLinks } from "../../credentials";
+import {
+  insertNewLink,
+  getLinks,
+  updateLink,
+  deleteLink,
+} from "../../credentials";
 import Link from "../components/Link";
+import style from "./dashboard.module.css";
+import stylelink from "../components/link.module.css";
 
 const DashboardView = () => {
   const navigate = useNavigate();
@@ -13,6 +20,8 @@ const DashboardView = () => {
   const [currentUser, setCurrentUser] = useState({});
   const [links, setLinks] = useState([]);
   const [link, setLink] = useState({});
+
+  console.log(links);
 
   const handleUserLoggedIn = async (user) => {
     setCurrentUser(user);
@@ -77,32 +86,60 @@ const DashboardView = () => {
       const res = insertNewLink({ ...newLink });
       newLink.docId = res.id;
 
+      setLink({ title: "", url: "" });
+
       setLinks([...links, newLink]);
     }
   };
 
-  const handleDeleteLink = () => {};
+  const handleDeleteLink = async (docId) => {
+    await deleteLink(docId);
+    const tmp = links.filter((link) => link.docId !== docId);
 
-  const handleUpdateLink = (docId, title, url) => {};
+    setLinks([...tmp]);
+  };
+
+  const handleUpdateLink = async (docId, title, url) => {
+    const link = links.find((link) => link.docId === docId);
+    link.title = title;
+    link.url = url;
+
+    await updateLink(docId, link);
+  };
 
   return (
     <div>
       <DashboardWrapper>
         <h2>Dashboard</h2>
 
-        <form onSubmit={handleSubmit}>
+        <form className={style.dashboard} onSubmit={handleSubmit}>
           <label htmlFor="title">Titulo</label>
-          <input type="text" id="title" name="title" onChange={handleChange} />
+          <input
+            className="input"
+            type="text"
+            id="title"
+            name="title"
+            value={link.title}
+            onChange={handleChange}
+          />
           <label htmlFor="url">url</label>
-          <input type="text" id="url" name="url" onChange={handleChange} />
-          <input type="submit" value="Enviar" />
+          <input
+            className="input"
+            type="text"
+            id="url"
+            name="url"
+            value={link.url}
+            onChange={handleChange}
+          />
+          <input className="btn" type="submit" value="Create new link" />
         </form>
 
-        <div>
+        <div className={stylelink.linksContainer}>
           {links.map((link) => (
             <Link
               key={link.docId}
               url={link.url}
+              docId={link.docId}
               title={link.title}
               onDelete={handleDeleteLink}
               onUpdate={handleUpdateLink}

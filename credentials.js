@@ -9,7 +9,9 @@ import {
   getDocs,
   setDoc,
   addDoc,
+  deleteDoc,
 } from "firebase/firestore";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
@@ -30,6 +32,7 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 export const auth = getAuth(firebaseApp);
 export const firestore = getFirestore(firebaseApp);
+export const storage = getStorage(firebaseApp);
 
 export default firebaseApp;
 
@@ -48,7 +51,7 @@ export const existUserName = async (username) => {
 
   //console.log(q);
 
-  console.log(querySnapshot);
+  //console.log(querySnapshot);
 
   querySnapshot.forEach((doc) => users.push(doc.data()));
 
@@ -107,4 +110,51 @@ export const getLinks = async (uid) => {
   } catch (error) {
     console.log(error.message);
   }
+};
+
+export const updateLink = async (docId, link) => {
+  try {
+    const docRef = doc(firestore, "Links", docId);
+    const res = await setDoc(docRef, link);
+    return res;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+export const deleteLink = async (docId) => {
+  const docRef = doc(firestore, "Links", docId);
+  const res = await deleteDoc(docRef);
+  return res;
+};
+
+export const setUserProfilePhoto = async (uid, file) => {
+  const imageRef = ref(storage, `Images/${uid}`);
+  const resUpload = await uploadBytes(imageRef, file);
+
+  return resUpload;
+};
+
+export const getProfileUrl = async (profilePicturePath) => {
+  try {
+    const imageRef = ref(storage, profilePicturePath);
+    const url = await getDownloadURL(imageRef);
+    return url;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+export const getUserPublicProfileInfo = async (uid) => {
+  const profileInfo = await getUserInfo(uid);
+  const linksInfo = await getLinks(uid);
+
+  return {
+    profileInfo,
+    linksInfo,
+  };
+};
+
+export const logOut = async () => {
+  await auth.signOut();
 };

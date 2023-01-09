@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { existUserName, updateUser } from "../../credentials";
 import AuthProvider from "../components/AuthProvider";
+import style from "./chooseUserName.module.css";
 
 const ChooseUserNameView = () => {
   const [currentState, setCurrentState] = useState(0);
@@ -44,17 +45,19 @@ const ChooseUserNameView = () => {
 
   if (currentState === 3 || currentState === 5) {
     return (
-      <div>
-        <h4>Bienvenido {currentUser.displayName}</h4>
+      <div className={style.chooseUserNameView}>
+        <h4 className={style.title}>Bienvenido {currentUser.displayName}</h4>
         <p>Para terminar el proceso elige un nombre de usuario</p>
         {currentState === 5 && (
           <p>El nombre de usuario ya existe escoge otro</p>
         )}
         <div>
-          <input type="text" onChange={handleChange} />
+          <input className="input" type="text" onChange={handleChange} />
         </div>
         <div>
-          <button onClick={handleContinue}>Continue</button>
+          <button className="btn" onClick={handleContinue}>
+            Continue
+          </button>
         </div>
       </div>
     );
@@ -62,7 +65,7 @@ const ChooseUserNameView = () => {
 
   if (currentState === 6) {
     return (
-      <div>
+      <div className={style.chooseUserNameView}>
         <h3>Felicidades, ya puedes ir al dashboard a crear tus links!</h3>
         <Link to="/dashboard">Continuar</Link>
       </div>

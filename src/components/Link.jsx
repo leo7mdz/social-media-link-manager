@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import style from "./link.module.css";
 
 const Link = ({ docId, title, url, onDelete, onUpdate }) => {
   const [currentTitle, setCurrentTitle] = useState(title);
@@ -47,10 +48,14 @@ const Link = ({ docId, title, url, onDelete, onUpdate }) => {
     onUpdate(docId, currentTitle, currentUrl);
   };
 
+  const handleDelete = () => {
+    onDelete(docId);
+  };
+
   return (
-    <div>
-      <div>
-        <div>
+    <div className={style.link}>
+      <div className={style.linkInfo}>
+        <div className={style.linkTitle}>
           {editTitle ? (
             <>
               <input
@@ -62,12 +67,14 @@ const Link = ({ docId, title, url, onDelete, onUpdate }) => {
             </>
           ) : (
             <>
-              <button onClick={handleEditTitle}>Edit</button>
+              <button className={style.btnEdit} onClick={handleEditTitle}>
+                <span className="material-icons">Edit</span>
+              </button>
               {currentTitle}
             </>
           )}
         </div>
-        <div>
+        <div className={style.linkUrl}>
           {editUrl ? (
             <>
               <input
@@ -79,15 +86,18 @@ const Link = ({ docId, title, url, onDelete, onUpdate }) => {
             </>
           ) : (
             <>
-              <button onClick={handleEditUrl}>Edit</button>
+              <button className={style.btnEdit} onClick={handleEditUrl}>
+                <span className="material-icons">Edit</span>
+              </button>
               {currentUrl}
             </>
           )}
         </div>
-
-        <div>
-          <button>Delete</button>
-        </div>
+      </div>
+      <div className={style.linkActions}>
+        <button className={style.btnDelete} onClick={handleDelete}>
+          <span className="material-icons">Delete</span>
+        </button>
       </div>
     </div>
   );
